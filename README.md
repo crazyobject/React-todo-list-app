@@ -26,3 +26,6 @@ Todo list application developed in react using functional components and bootstr
 ## Demo - Todo manager
 
 ![Debounce React Input](./app/react-todo-app.gif)
+
+## Demo - screenshot
+<img src="./app/react-todo-screenshot.jpg" width="80%" height="auto" />
