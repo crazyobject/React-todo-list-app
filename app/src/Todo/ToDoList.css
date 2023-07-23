@@ -1,0 +1,21 @@
+.listContainer {
+    padding:10px;
+    background-color: rgb(238, 238, 238);
+    border-radius:0.5rem 0.5rem 0.5rem 0.5rem;
+}
+.listContainer li{
+    margin:4px;
+    border-radius:0.5rem 0.5rem 0.5rem 0.5rem;
+    text-transform: capitalize;
+}
+.listContainer li small{
+    font-size: 11px;
+}
+
+.icons-blue{
+    color:blue;
+}
+.icons-red{
+    color:red;
+    margin-right: 10px;
+}
