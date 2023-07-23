@@ -1,6 +1,16 @@
-# React-todo-list-app
+# React-todo-list-app (Formik,Yup,Bootstrap,Toast, localstorage)
 
-Todo list application developed in react functional components and bootstrap. User can create new todo items. Every todo item will have status like ( incomplete , completed ). Users can mark them as complete once done. todo items are cached using localstorage. User can edit and delete existing todo items.
+Todo list application developed in react using functional components and bootstrap.<br/>
+<ul>
+<li><b>Create new</b> task item.</li>
+<li><b>Edit</b> existing task item.</li> 
+<li><b>Delete</b> existing task item.</li> 
+<li><b>Flag</b> task as completed.</li>
+<li>Remove completed flag and bring back to in progress.</li>
+<li>Displaying success messages using <b>Toast</b></li> 
+<li><b>Filter</b> the tasks based on status (completed / incomplete / all)</li>
+<li><b>Localstorage</b> is used to remember your tasks</li> 
+</ul>
 
 ## Live app on stackblitz<br/>
 
@@ -13,6 +23,6 @@ Todo list application developed in react functional components and bootstrap. Us
 3. npm install
 4. npm start
 
-## Demo - add new employee
+## Demo - Todo manager
 
 ![Debounce React Input](./app/react-todo-app.gif)
