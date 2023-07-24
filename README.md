@@ -1,6 +1,6 @@
 # React-todo-list-app (Formik,Yup,Bootstrap,Toast, localstorage)
 
-Todo list application developed in react using functional components and bootstrap.<br/>
+Todo list application developed in react using functional components and bootstrap. <br/>
 <ul>
 <li><b>Create new</b> task item.</li>
 <li><b>Edit</b> existing task item.</li> 
