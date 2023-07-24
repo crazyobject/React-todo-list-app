@@ -2,28 +2,20 @@ import React, { useState } from "react";
 import PushNotifier from "../util/PushNotifier";
 import "./ToDoList.css";
 import TodoItem from "./TodoItem";
+import { toast } from "react-toastify";
 
 const ToDoList = (props) => {
   const { filteredData, updateData, todoData } = props;
-  // notifier
-  const [showNotifier, setShowNotifier] = useState(false);
-  const toggleShowNotifier = () => setShowNotifier(!showNotifier);
 
   const deleteTodo = (todoId) => {
     const afterDeleting = filteredData.filter((todo) => todo.key !== todoId);
     updateData(afterDeleting);
-    setShowNotifier(true);
+    toast("Task deleted successfully!");
   };
-
-  // <TodoItem todo={todo} deleteTodo={deleteTodo} />
 
   return (
     <>
-      <PushNotifier
-        show={showNotifier}
-        toggleShowNotifier={toggleShowNotifier}
-        text="Task deleted successfully!"
-      />
+      <PushNotifier />
       <div class="container listContainer">
         <div class="row">
           <div class="add-item text-center">

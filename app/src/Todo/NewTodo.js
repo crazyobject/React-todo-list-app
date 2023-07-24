@@ -5,6 +5,7 @@ import { BsPlusSquareFill } from "react-icons/bs";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PushNotifier from "../util/PushNotifier";
+import { toast } from "react-toastify";
 
 const initialValues = {
   todoTitle: "",
@@ -20,10 +21,6 @@ const NewTodo = (props) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // notifier
-  const [showNotifier, setShowNotifier] = useState(false);
-  const toggleShowNotifier = () => setShowNotifier(!showNotifier);
-
   const saveNewTodo = (newTodoTitle) => {
     let nextKey = todoData.length > 0 ? todoData[0].key + 1 : 1;
     const dateTime = new Date().toLocaleString();
@@ -33,11 +30,12 @@ const NewTodo = (props) => {
         todoTitle: newTodoTitle,
         dateTime: dateTime,
         status: "incomplete",
+        favourite: "false",
       },
       ...todoData,
     ];
     updateData(updatedToDo);
-    setShowNotifier(true);
+    toast("Task added to the list!");
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -53,11 +51,7 @@ const NewTodo = (props) => {
 
   return (
     <>
-      <PushNotifier
-        show={showNotifier}
-        toggleShowNotifier={toggleShowNotifier}
-        text="Task added to the todo list"
-      />
+      <PushNotifier />
       <BsPlusSquareFill
         size={30}
         color={"blue"}

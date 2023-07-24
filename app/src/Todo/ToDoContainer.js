@@ -21,12 +21,19 @@ const ToDoContainer = () => {
 
   useEffect(() => {
     let filteredTodo;
-    if (filterState === "all") {
-      filteredTodo = todoData;
-    } else {
+
+    if (filterState === "favourite") {
       filteredTodo = todoData.filter((todo) => {
-        return todo.status === filterState;
+        return todo.favourite === "true";
       });
+    } else {
+      if (filterState === "all") {
+        filteredTodo = todoData;
+      } else {
+        filteredTodo = todoData.filter((todo) => {
+          return todo.status === filterState;
+        });
+      }
     }
     setFilteredData(filteredTodo);
   }, [filterState, todoData]);
@@ -43,45 +50,67 @@ const ToDoContainer = () => {
               <div class="card-body p-md-5">
                 <div class="row justify-content-center">
                   <div class="col-md-10 col-lg-6 col-xl-10 order-2 order-lg-1">
-                    <p class="text-center h1 fw-bold mb-2 mt-2">
-                      To DO List ({filteredData.length})
-                    </p>
                     <div className="buttonContainer">
-                      <NewTodo todoData={todoData} updateData={updateData} />
-                      <Dropdown
-                        style={{ display: "inline", marginLeft: "87%" }}
-                      >
-                        <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                          Status
-                        </Dropdown.Toggle>
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <NewTodo
+                            todoData={todoData}
+                            updateData={updateData}
+                          />
+                        </div>
+                        <div>
+                          <p class="text-center h2 fw-bold">
+                            <div className="containerTitle">
+                              Todo List - {filterState} ({filteredData.length})
+                            </div>
+                          </p>
+                        </div>
+                        <div>
+                          <Dropdown>
+                            <Dropdown.Toggle
+                              variant="primary"
+                              id="dropdown-basic"
+                            >
+                              Status
+                            </Dropdown.Toggle>
 
-                        <Dropdown.Menu>
-                          <Dropdown.Item
-                            href="#/action-1"
-                            onClick={() => {
-                              setFilterState("all");
-                            }}
-                          >
-                            All
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            href="#/action-2"
-                            onClick={() => {
-                              setFilterState("incomplete");
-                            }}
-                          >
-                            Incomplete
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            href="#/action-3"
-                            onClick={() => {
-                              setFilterState("complete");
-                            }}
-                          >
-                            Completed
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
+                            <Dropdown.Menu>
+                              <Dropdown.Item
+                                href="#/action-1"
+                                onClick={() => {
+                                  setFilterState("all");
+                                }}
+                              >
+                                All
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                href="#/action-2"
+                                onClick={() => {
+                                  setFilterState("incomplete");
+                                }}
+                              >
+                                Incomplete
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                href="#/action-3"
+                                onClick={() => {
+                                  setFilterState("complete");
+                                }}
+                              >
+                                Completed
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                href="#/action-4"
+                                onClick={() => {
+                                  setFilterState("favourite");
+                                }}
+                              >
+                                Favourite
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </div>
+                      </div>
                     </div>
                     <ToDoList
                       filteredData={filteredData}

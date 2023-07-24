@@ -3,6 +3,7 @@ import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PushNotifier from "../util/PushNotifier";
+import Favourite from "./Favourite";
 import {
   BsCheckCircle,
   BsXCircle,
@@ -10,6 +11,7 @@ import {
   BsArrowClockwise,
 } from "react-icons/bs";
 import "./TodoItem.css";
+import { toast } from "react-toastify";
 
 // todo - bring this fom schema file
 const validation = Yup.object({
@@ -20,11 +22,6 @@ const validation = Yup.object({
 const TodoItem = (props) => {
   const { todo, deleteTodo, updateData, todoData } = props;
   const [mode, setMode] = useState("view");
-  const [notificationMsg, setNotificationMsg] = useState("");
-
-  // notifier
-  const [showNotifier, setShowNotifier] = useState(false);
-  const toggleShowNotifier = () => setShowNotifier(!showNotifier);
 
   // formik and yup validation
   const initialValues = {
@@ -45,7 +42,27 @@ const TodoItem = (props) => {
       return obj;
     });
     updateData(updatedAfterStatusChange);
-    showMsg(`Task marked as ${status}`);
+    toast(`Task marked as ${status}`);
+  };
+
+  // add to favourite
+  const updateFavouriteStatus = (key, status) => {
+    const updatedAfterStatusChange = todoData.map((todo) => {
+      let obj =
+        todo.key === key
+          ? {
+              ...todo,
+              favourite: status,
+            }
+          : todo;
+      return obj;
+    });
+    updateData(updatedAfterStatusChange);
+    const msg =
+      status === "true"
+        ? "Task added to favourites"
+        : "Task removed from favourites";
+    toast(msg);
   };
 
   const { errors, touched, handleBlur, handleChange, handleSubmit } = useFormik(
@@ -66,27 +83,22 @@ const TodoItem = (props) => {
         });
         updateData(updatedTodo);
         setMode("view");
-        showMsg("Task edited successfully!");
+        toast("Task edited successfully!");
       },
     }
   );
 
-  const showMsg = (text) => {
-    setNotificationMsg(text);
-    setShowNotifier(true);
-  };
-
   return (
     <>
-      <PushNotifier
-        show={showNotifier}
-        toggleShowNotifier={toggleShowNotifier}
-        text={notificationMsg}
-      />
+      <PushNotifier />
       {todo.status === "complete" ? (
         <>
           <div className="itemContainer">
             <del>{todo.todoTitle}</del>
+            <Favourite
+              updateFavouriteStatus={updateFavouriteStatus}
+              todo={todo}
+            />
             <br />
             <small>{todo.dateTime}</small>
           </div>
@@ -95,7 +107,13 @@ const TodoItem = (props) => {
         <>
           <div className="itemContainer">
             {mode === "view" ? (
-              todo.todoTitle
+              <>
+                {todo.todoTitle}
+                <Favourite
+                  updateFavouriteStatus={updateFavouriteStatus}
+                  todo={todo}
+                />
+              </>
             ) : (
               <form onSubmit={handleSubmit}>
                 <input
@@ -109,18 +127,21 @@ const TodoItem = (props) => {
                 <input type="hidden" name="key" value={todo.key} />
                 <BsXCircle
                   size={20}
-                  style={{ color: "red", margin: "10px" }}
+                  style={{ color: "red", margin: "10px", cursor: "pointer" }}
                   onClick={() => {
                     setMode("view");
                   }}
+                  title="Cancel"
                 />
                 <BsCheckCircle
                   size={20}
                   style={{
                     color: "green",
                     margin: "10px",
+                    cursor: "pointer",
                   }}
                   onClick={handleSubmit}
+                  title="Save"
                 />
                 {errors.todoTitle && touched.todoTitle ? (
                   <small className="text-danger mt-1">{errors.todoTitle}</small>
@@ -132,56 +153,66 @@ const TodoItem = (props) => {
           </div>
         </>
       )}
-      <div>
-        {todo.status === "incomplete" ? (
-          <BsFillCheckCircleFill
+      <div class="d-flex justify-content-between">
+        <div>
+          {todo.status === "incomplete" ? (
+            <BsFillCheckCircleFill
+              className="custom-icons"
+              size={20}
+              style={{
+                color: "blue",
+                marginRight: "10px",
+                cursor: "hand",
+              }}
+              title="Mark Task as complete"
+              onClick={() => {
+                updateTaskStatus(todo.key, "complete");
+              }}
+            />
+          ) : (
+            <BsArrowClockwise
+              className="custom-icons"
+              size={20}
+              style={{
+                color: "blue",
+                marginRight: "10px",
+                cursor: "hand",
+              }}
+              title="Bring back to in progress"
+              onClick={() => {
+                updateTaskStatus(todo.key, "incomplete");
+              }}
+            />
+          )}
+        </div>
+        <div>
+          <BsTrash
+            className="icons-red custom-icons"
             size={20}
             style={{
-              color: "blue",
-              margin: "10px",
               cursor: "hand",
             }}
-            title="Mark Task as complete"
+            title="Delete todo"
             onClick={() => {
-              updateTaskStatus(todo.key, "complete");
+              deleteTodo(todo.key);
             }}
           />
-        ) : (
-          <BsArrowClockwise
+        </div>
+        <div>
+          <BsPencilSquare
+            className="icons-blue custom-icons"
             size={20}
-            style={{
-              color: "blue",
-              margin: "10px",
-              cursor: "hand",
-            }}
-            title="Bring back to in progress"
+            style={{ cursor: "hand" }}
+            title={
+              todo.status === "complete"
+                ? "You can't edit completed task"
+                : "Edit task"
+            }
             onClick={() => {
-              updateTaskStatus(todo.key, "incomplete");
+              todo.status === "incomplete" ? setMode("edit") : void 0;
             }}
           />
-        )}
-        <BsTrash
-          className="icons-red"
-          size={20}
-          style={{ cursor: "hand" }}
-          title="Delete todo"
-          onClick={() => {
-            deleteTodo(todo.key);
-          }}
-        />
-        <BsPencilSquare
-          className="icons-blue"
-          size={20}
-          style={{ cursor: "hand" }}
-          title={
-            todo.status === "complete"
-              ? "You can't edit completed task"
-              : "Edit task"
-          }
-          onClick={() => {
-            todo.status === "incomplete" ? setMode("edit") : void 0;
-          }}
-        />
+        </div>
       </div>
     </>
   );

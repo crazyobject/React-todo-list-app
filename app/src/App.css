@@ -3,7 +3,17 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
+.custom-icons:hover{
+  margin-bottom: 3px;
+}
+.containerTitle{
+  background-color: #666666;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
