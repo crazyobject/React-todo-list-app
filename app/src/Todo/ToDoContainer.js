@@ -3,6 +3,7 @@ import "./ToDo.css";
 import Dropdown from "react-bootstrap/Dropdown";
 import NewTodo from "./NewTodo";
 import ToDoList from "./ToDoList";
+import SearchBox from "./SearchBox";
 
 const ToDoContainer = () => {
   const initialData = function () {
@@ -21,18 +22,23 @@ const ToDoContainer = () => {
 
   useEffect(() => {
     let filteredTodo;
-
-    if (filterState === "favourite") {
-      filteredTodo = todoData.filter((todo) => {
-        return todo.favourite === "true";
+    if (filterState.includes("Search - ")) {
+      filteredTodo = todoData.filter((item) => {
+        return item.todoTitle.toLowerCase().search(filterState[1]) !== -1;
       });
     } else {
-      if (filterState === "all") {
-        filteredTodo = todoData;
-      } else {
+      if (filterState === "favourite") {
         filteredTodo = todoData.filter((todo) => {
-          return todo.status === filterState;
+          return todo.favourite === "true";
         });
+      } else {
+        if (filterState === "all") {
+          filteredTodo = todoData;
+        } else {
+          filteredTodo = todoData.filter((todo) => {
+            return todo.status === filterState;
+          });
+        }
       }
     }
     setFilteredData(filteredTodo);
@@ -51,6 +57,11 @@ const ToDoContainer = () => {
                 <div class="row justify-content-center">
                   <div class="col-md-10 col-lg-6 col-xl-10 order-2 order-lg-1">
                     <div className="buttonContainer">
+                      <p class="text-center h2 fw-bold">
+                        <div className="containerTitle">
+                          Todo List - {filterState} ({filteredData.length})
+                        </div>
+                      </p>
                       <div class="d-flex justify-content-between">
                         <div>
                           <NewTodo
@@ -59,11 +70,10 @@ const ToDoContainer = () => {
                           />
                         </div>
                         <div>
-                          <p class="text-center h2 fw-bold">
-                            <div className="containerTitle">
-                              Todo List - {filterState} ({filteredData.length})
-                            </div>
-                          </p>
+                          <SearchBox
+                            todoData={todoData}
+                            setFilterState={setFilterState}
+                          />
                         </div>
                         <div>
                           <Dropdown>
